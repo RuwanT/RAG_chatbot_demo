@@ -16,19 +16,26 @@ if 'chat_history' not in st.session_state:
     st.session_state.chat_history = [
         AIMessage(content="Hello I am your virtual HDR manager. How can I help you?")
     ]
-    
-# Textbox for user input
-user_query = st.chat_input('Type your question here...')
-if user_query is not None and user_query != "":
-    response = get_response(user_query)
-    st.session_state.chat_history.append(HumanMessage(content=user_query))
-    st.session_state.chat_history.append(AIMessage(content=response))
 
-# conversation
-for message in st.session_state.chat_history:
-    if isinstance(message, AIMessage):
-        with st.chat_message("assistant"):
-            st.write(message.content)
-    elif isinstance(message, HumanMessage):
-        with st.chat_message("Human"):
-            st.write(message.content)
+with st.sidebar:
+    st.header("Settings")
+    rmit_email = st.text_input("RMIT email:")
+    
+if rmit_email is None or rmit_email=="":
+    st.info("Please enter an RMIT email in the sidebar:")
+else:
+    # Textbox for user input
+    user_query = st.chat_input('Type your question here...')
+    if user_query is not None and user_query != "":
+        response = get_response(user_query)
+        st.session_state.chat_history.append(HumanMessage(content=user_query))
+        st.session_state.chat_history.append(AIMessage(content=response))
+
+    # conversation
+    for message in st.session_state.chat_history:
+        if isinstance(message, AIMessage):
+            with st.chat_message("assistant"):
+                st.write(message.content)
+        elif isinstance(message, HumanMessage):
+            with st.chat_message("Human"):
+                st.write(message.content)
