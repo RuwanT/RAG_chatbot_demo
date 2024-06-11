@@ -57,7 +57,7 @@ if __name__ == "__main__":
     
     # Identifiy the text files that are not processed yet.
     files2process, first_time = getTextFiles2Add()
-    # print(files2process)
+    print("Mumber of files Processed: ", len(files2process))
     
     headers_to_split_on = [
         ("#", "Header 1"),
