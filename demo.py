@@ -9,8 +9,6 @@ from langchain.chains import create_history_aware_retriever, create_retrieval_ch
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.vectorstores import Chroma
 
-#streamlit run demo.py --server.fileWatcherType none
-
 # read API keys for Pinecone and OpenAI
 #   Should have keys saved in .env file
 success_env = load_dotenv(find_dotenv())
@@ -45,6 +43,7 @@ def get_conversational_rag_chain(retriever_chain):
         ("system", "You are a administration officer at RMIT university taked with providing accurate information."),
         ("system", "Answer the users question based on the following context:\n\n{context}"),
         ("system", "You should always provide the link to the intranet page where the information was found."),
+        ("system", "If the information to answer the question is not found in the context, clearly mention that you dont have that information and ask the user to contact HDR DA for school."),
         MessagesPlaceholder(variable_name="chat_history"),
         ("user", "{input}")
     ])
@@ -65,10 +64,11 @@ def get_response(user_query):
     return response['answer']
 
 # Layout
-st.set_page_config(page_title="Chat with websites")
+st.set_page_config(page_title="HDR Manager Chatbot")
 st.markdown("""
     <h1 style='text-align: center; font-size: 36px;'>Virtual HDR Manager</h1>
     <h2 style='text-align: center; font-size: 24px;'>School of Computing Technologies - RMIT University</h2>
+    <h3 style='text-align: center; font-size: 18px; border: 2px solid red;'>As an AI chatbot, my role is to assist you in accessing information from the RMIT intranet. Please ensure the accuracy of the information by consulting the provided intranet links.</h3>
     """, unsafe_allow_html=True)
 
 

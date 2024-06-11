@@ -16,7 +16,7 @@ DATA_PATH = "../Data_intranet/"
 
 def getTextFiles2Add():
     firstTime = True
-    print("Get files not added to Pinecone database...")
+    print("Get files not added to vector database...")
     f = open(DATA_PATH + "current_files.txt", "w")
     for file in glob.glob(DATA_PATH + '**/*.md', recursive=True):
         f.writelines(file + '\n')
