@@ -3,10 +3,11 @@ from langchain_core.messages import AIMessage, HumanMessage
 from dotenv import load_dotenv, find_dotenv
 
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
-from langchain_pinecone import PineconeVectorStore
+#from langchain_pinecone import PineconeVectorStore
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_community.vectorstores import Chroma
 
 #streamlit run demo.py --server.fileWatcherType none
 
@@ -18,7 +19,8 @@ success_env = load_dotenv(find_dotenv())
 
 def get_vectorstore():
     embedding = OpenAIEmbeddings(model="text-embedding-3-small")
-    vectorstore = PineconeVectorStore(index_name="hdr-manager-rmit", embedding=embedding)
+    vectorstore = Chroma(persist_directory="../hdr-manager-rmit-chroma_db", 
+                             embedding_function=embedding)
     
     return vectorstore
 

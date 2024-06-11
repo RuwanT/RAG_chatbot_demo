@@ -8,8 +8,9 @@ import shutil
 from langchain_text_splitters import MarkdownHeaderTextSplitter
 from langchain_openai import OpenAIEmbeddings
 import os
-from langchain_pinecone import PineconeVectorStore
-from langchain_community.vectorstores import Pinecone
+# from langchain_pinecone import PineconeVectorStore
+# from langchain_community.vectorstores import Pinecone
+from langchain_community.vectorstores import Chroma
 
 DATA_PATH = "../Data_intranet/"
 
@@ -22,13 +23,13 @@ def getTextFiles2Add():
     f.close()
     
     files2process = []
-    if not Path(DATA_PATH + 'processed_files.txt').is_file(): 
+    if not Path(DATA_PATH + 'processed_files_chroma.txt').is_file(): 
         firstTime = True 
         with open(DATA_PATH + 'current_files.txt') as cur_f: 
             files2process = [line[:-1] for line in cur_f.readlines()]
     else:
         firstTime = False
-        with open(DATA_PATH + 'processed_files.txt') as proc_f: 
+        with open(DATA_PATH + 'processed_files_chroma.txt') as proc_f: 
             proc_f_text = proc_f.readlines() 
     
         with open(DATA_PATH + 'current_files.txt') as cur_f: 
@@ -45,7 +46,7 @@ def getTextFiles2Add():
                 files2process.append(line[1:-1])
     
     # print(files2process)
-    shutil.move(DATA_PATH+"current_files.txt", DATA_PATH+"processed_files.txt")
+    shutil.move(DATA_PATH+"current_files.txt", DATA_PATH+"processed_files_chroma.txt")
     return files2process, firstTime
     
     
@@ -76,13 +77,14 @@ if __name__ == "__main__":
     embedding = OpenAIEmbeddings(model="text-embedding-3-small")
     
     if first_time:
-        vectorstore = PineconeVectorStore.from_documents(
+        vectorstore = Chroma.from_documents(
                 new_documents,
-                index_name="hdr-manager-rmit",
-                embedding=embedding
+                embedding,
+                persist_directory="../hdr-manager-rmit-chroma_db",
         )
     else:
-        vectorstore = PineconeVectorStore(index_name="hdr-manager-rmit", embedding=embedding)
+        vectorstore = Chroma(persist_directory="../hdr-manager-rmit-chroma_db", 
+                             embedding_function=embedding)
         vectorstore.add_documents(new_documents)
         
     # query = "Who is accountable for the allocation of supervisors to HDR candidates?"
