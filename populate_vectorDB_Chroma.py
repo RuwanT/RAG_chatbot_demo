@@ -11,8 +11,16 @@ import os
 # from langchain_pinecone import PineconeVectorStore
 # from langchain_community.vectorstores import Pinecone
 from langchain_community.vectorstores import Chroma
+from langchain_mistralai import MistralAIEmbeddings
 
 DATA_PATH = "../Data_intranet/"
+
+USE_OPENAI = True
+
+if USE_OPENAI:
+    PROCESSED_FILE = "processed_files_chroma_openAI.txt"
+else:
+    PROCESSED_FILE = "processed_files_chroma_mistral.txt"
 
 def getTextFiles2Add():
     firstTime = True
@@ -23,16 +31,16 @@ def getTextFiles2Add():
     f.close()
     
     files2process = []
-    if not Path(DATA_PATH + 'processed_files_chroma.txt').is_file(): 
+    if not Path(DATA_PATH + PROCESSED_FILE).is_file(): 
         firstTime = True 
-        with open(DATA_PATH + 'current_files.txt') as cur_f: 
+        with open(DATA_PATH + "current_files.txt") as cur_f: 
             files2process = [line[:-1] for line in cur_f.readlines()]
     else:
         firstTime = False
-        with open(DATA_PATH + 'processed_files_chroma.txt') as proc_f: 
+        with open(DATA_PATH + PROCESSED_FILE) as proc_f: 
             proc_f_text = proc_f.readlines() 
     
-        with open(DATA_PATH + 'current_files.txt') as cur_f: 
+        with open(DATA_PATH + "current_files.txt") as cur_f: 
             cur_f_text = cur_f.readlines() 
         
         # Find and print the diff: 
@@ -46,7 +54,7 @@ def getTextFiles2Add():
                 files2process.append(line[1:-1])
     
     # print(files2process)
-    shutil.move(DATA_PATH+"current_files.txt", DATA_PATH+"processed_files_chroma.txt")
+    shutil.move(DATA_PATH+"current_files.txt", DATA_PATH + PROCESSED_FILE)
     return files2process, firstTime
     
     
@@ -72,24 +80,28 @@ if __name__ == "__main__":
         markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
         md_splits = markdown_splitter.split_text(text)
         new_documents.extend(md_splits)
-        
-    # print(new_documents)
-    embedding = OpenAIEmbeddings(model="text-embedding-3-small")
     
-    if first_time:
-        vectorstore = Chroma.from_documents(
-                new_documents,
-                embedding,
-                persist_directory="../hdr-manager-rmit-chroma_db",
-        )
-    else:
-        vectorstore = Chroma(persist_directory="../hdr-manager-rmit-chroma_db", 
-                             embedding_function=embedding)
-        vectorstore.add_documents(new_documents)
+    if len(new_documents) > 0:
+        # print(new_documents)
+        if USE_OPENAI:
+            embedding = OpenAIEmbeddings(model="text-embedding-3-small")
+            vector_store_dir = "../hdr-manager-rmit-chroma_db"
+        else:
+            embedding = MistralAIEmbeddings()
+            vector_store_dir = "../hdr-manager-rmit-chroma_db_mistral"
         
-    # query = "Who is accountable for the allocation of supervisors to HDR candidates?"
-    # results = vectorstore.similarity_search(query)
-    # print(results)
+        if first_time:
+            vectorstore = Chroma.from_documents(
+                    new_documents,
+                    embedding,
+                    persist_directory=vector_store_dir,
+            )
+        else:
+            vectorstore = Chroma(persist_directory=vector_store_dir, 
+                                embedding_function=embedding)
+            vectorstore.add_documents(new_documents)
+    else:
+        print("No ducuments to add.")    
         
     
         
