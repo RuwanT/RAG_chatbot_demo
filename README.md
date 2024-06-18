@@ -1,24 +1,25 @@
-# RAG_chatbot_demo
-Simple chatbot using Retrieval-Augmented Generation aka RAG.
+# RAG Chatbot
+A simple chatbot using Retrieval-Augmented Generation (RAG).
 
-The Chatbot will act as a university administratoion officer and assist questions related to Higher degree by Reserch matters. 
+The chatbot is designed to act as a university administrative officer, assisting with questions related to Higher Degree by Research (HDR) matters.
 
-The chatbot uses OpenAI API and is based on Langchain. Can use either Pinecone or Chroma vector database.
+The chatbot uses the OpenAI API and is based on Langchain. It can use either Pinecone or Chroma as the vector database.
 
 ## Running code
-1. Create a python virtual environment and install the requirements in `requirements.txt`
+1. Create a Python virtual environment and install the requirements:
     ```
     >> python3 -m venv chatbot
-    >> python3 -m pip install -r requirements.txt
+    >> pip install -r requirements.txt
     ```
-2. Create `.env` file in the local directory and add
+2. Create a `.env` file in the local directory and add your API keys:
    ```
    OPENAI_API_KEY="your key"
    PINECONE_API_KEY="your key"
    MISTRAL_API_KEY="your key"
    ```
-3. Adding to vector database - The private data shold be saved as markdown files and stored at `../Data_intranet/`
-4. If Using Chroma DB:
+3. Add data to the vector database:
+   - Save private data as markdown files and store them in `../Data_intranet/`
+4. If using Chroma DB:
     ```
     >> python populate_vectorDB_Chroma
     ```
@@ -28,7 +29,8 @@ The chatbot uses OpenAI API and is based on Langchain. Can use either Pinecone o
     >> python populate_vectorDB_pinecone
     ```
 
-6. Running the app - The app is done in Streamlit and you can run with following command. If using 
+6. Run the app: 
+   - TThe app is built with Streamlit. Use the following command to run it: 
     ```
     >> streamlit run demo.py --server.fileWatcherType none --server.port 8080
     ```
