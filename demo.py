@@ -35,7 +35,7 @@ def get_vectorstore():
 
 def get_context_retriever_chain(vectorstore):
     if USE_OPENAI:
-        llm = ChatOpenAI(model='gpt-3.5-turbo')
+        llm = ChatOpenAI()
     else:
         llm = ChatMistralAI()
     
@@ -52,7 +52,7 @@ def get_context_retriever_chain(vectorstore):
     
 def get_conversational_rag_chain(retriever_chain):
     if USE_OPENAI:
-        llm = ChatOpenAI(model='gpt-3.5-turbo')
+        llm = ChatOpenAI()
     else:
         llm = ChatMistralAI()
     
@@ -81,26 +81,19 @@ def get_response(user_query):
     return response['answer']
 
 # Layout
-st.set_page_config(page_title="HDR Manager Chatbot")
+st.set_page_config(page_title="HDR-Assist")
 st.markdown("""
-    <h1 style='text-align: center; font-size: 36px;'>Virtual HDR Manager</h1>
+    <h1 style='text-align: center; font-size: 36px; margin-bottom: -20px;'>HDR-Assist</h1>
+    <h2 style='text-align: center; font-size: 24px; margin-top: -10px;'>Support tool for Higher Degree by Research supervisors</h2>
     """, unsafe_allow_html=True)
 
-
-
-# with st.sidebar:
-#     st.header("User Agreement")
-#     st.write("Do not add any personal identificaation details.")
-#     if st.checkbox('I agree'):
-#         if st.button('Start'):
-#             st.session_state.agreed = True
     
 if "agreed" not in st.session_state:
     
     st.markdown("""
         - Do not enter prompts that contain:
-         - Information that you would not usually share with other people.
-         - Personal, sensitive, and health information about yourself or anyone else. This includes details such as names, student and staff ID numbers, email addresses, phone numbers, dates of birth, and photos.
+            1. Information that you would not usually share with other people.
+            2. Personal, sensitive, and health information about yourself or anyone else. This includes details such as names, student and staff ID numbers, email addresses, phone numbers, dates of birth, and photos.
         - Ensure that you employ critical thinking to evaluate the outputs that you receive, as generative AI applications may at times provide incorrect, biased and inappropriate content.
         - Use of this service must comply with the RMIT [Acceptable Use Standard - Information Technology](https://policies.rmit.edu.au/document/view.php?id=76)
         """, unsafe_allow_html=True)
@@ -112,24 +105,25 @@ if "agreed" not in st.session_state:
 elif (not st.session_state.agreed):
     st.markdown("""
         - Do not enter prompts that contain:
-         - Information that you would not usually share with other people.
-         - Personal, sensitive, and health information about yourself or anyone else. This includes details such as names, student and staff ID numbers, email addresses, phone numbers, dates of birth, and photos.
+            1. Information that you would not usually share with other people.
+            2. Personal, sensitive, and health information about yourself or anyone else. This includes details such as names, student and staff ID numbers, email addresses, phone numbers, dates of birth, and photos.
         - Ensure that you employ critical thinking to evaluate the outputs that you receive, as generative AI applications may at times provide incorrect, biased and inappropriate content.
         - Use of this service must comply with the RMIT [Acceptable Use Standard - Information Technology](https://policies.rmit.edu.au/document/view.php?id=76)
         """, unsafe_allow_html=True)
     
     st.session_state.agreed = st.checkbox('I acknowledge')
     st.button('Start')
+        
     
 else:
     
     st.markdown("""
-        <h3 style='text-align: center; font-size: 18px; border: 2px solid red;'>As an AI chatbot, my role is to assist you in accessing information from the RMIT intranet. Please ensure the accuracy of the information by consulting the provided intranet links.</h3>
+        <h3 style='text-align: center; font-size: 18px; border: 2px solid red;'>As an AI chatbot, my role is to assist you in accessing information relevant to HDR. Please ensure the accuracy of the information by consulting the provided intranet links.</h3>
         """, unsafe_allow_html=True)
     # Persistent storage for messages, vector store and retrival/rag chains
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = [
-            AIMessage(content="Hello I am your virtual HDR manager. How can I help you?")
+            AIMessage(content="Hello I am HDR-Assist. How can I help you?")
         ]
     if "vector_store" not in st.session_state:
         st.session_state.vector_store = get_vectorstore()
