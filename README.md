@@ -5,6 +5,10 @@ The chatbot uses OpenAI API and is based on Langchain. Can use either Pinecone o
 
 ## Running code
 1. Create a python virtual environment and install the requirements in `requirements.txt`
+    ```
+    >> python3 -m venv chatbot
+    >> python3 -m pip install -r requirements.txt
+    ```
 2. Create `.env` file in the local directory and add
    ```
    OPENAI_API_KEY="your key"
@@ -22,7 +26,7 @@ The chatbot uses OpenAI API and is based on Langchain. Can use either Pinecone o
     >> python populate_vectorDB_pinecone
     ```
 
-7. Running the app - The app is done in Streamlit and you can run with following command. If using 
+6. Running the app - The app is done in Streamlit and you can run with following command. If using 
     ```
     >> streamlit run demo.py --server.fileWatcherType none --server.port 8080
     ```
