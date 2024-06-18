@@ -1,6 +1,8 @@
 # RAG_chatbot_demo
 Simple chatbot using Retrieval-Augmented Generation aka RAG.
 
+The Chatbot will act as a university administratoion officer and assist questions related to Higher degree by Reserch matters. 
+
 The chatbot uses OpenAI API and is based on Langchain. Can use either Pinecone or Chroma vector database.
 
 ## Running code
