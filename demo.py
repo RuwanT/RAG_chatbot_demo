@@ -2,7 +2,8 @@ import streamlit as st
 from langchain_core.messages import AIMessage, HumanMessage
 from dotenv import load_dotenv, find_dotenv
 
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+#from langchain_openai import OpenAIEmbeddings, ChatOpenAI, AzureOpenAIEmbeddings, AzureChatOpenAI
+from langchain_openai import AzureOpenAIEmbeddings, AzureChatOpenAI
 #from langchain_pinecone import PineconeVectorStore
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
@@ -21,7 +22,10 @@ success_env = load_dotenv(find_dotenv())
 
 def get_vectorstore():
     if USE_OPENAI:
-        embedding = OpenAIEmbeddings(model="text-embedding-3-small")
+        embedding = AzureOpenAIEmbeddings(
+            azure_deployment="text-embedding-3-small",
+            api_version="2023-06-01-preview",
+        )
         vector_store_dir = "../hdr-manager-rmit-chroma_db"
     else:
         embedding = MistralAIEmbeddings()
@@ -35,7 +39,10 @@ def get_vectorstore():
 
 def get_context_retriever_chain(vectorstore):
     if USE_OPENAI:
-        llm = ChatOpenAI()
+        llm = AzureChatOpenAI(
+            azure_deployment="gpt4",
+            api_version="2023-06-01-preview",
+        )
     else:
         llm = ChatMistralAI()
     
@@ -52,7 +59,10 @@ def get_context_retriever_chain(vectorstore):
     
 def get_conversational_rag_chain(retriever_chain):
     if USE_OPENAI:
-        llm = ChatOpenAI()
+        llm = AzureChatOpenAI(
+            azure_deployment="gpt4",
+            api_version="2023-06-01-preview",
+        )
     else:
         llm = ChatMistralAI()
     
