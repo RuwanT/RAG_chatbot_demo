@@ -23,10 +23,10 @@ success_env = load_dotenv(find_dotenv())
 def get_vectorstore():
     if USE_OPENAI:
         embedding = AzureOpenAIEmbeddings(
-            azure_deployment="text-embedding-3-small",
+            azure_deployment="text-embedding-3-large",
             api_version="2023-06-01-preview",
         )
-        vector_store_dir = "../hdr-manager-rmit-chroma_db"
+        vector_store_dir = "../hdr-manager-rmit-chroma_db_v2"
     else:
         embedding = MistralAIEmbeddings()
         

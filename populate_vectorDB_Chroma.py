@@ -6,7 +6,8 @@ import os
 import shutil
 
 from langchain_text_splitters import MarkdownHeaderTextSplitter
-from langchain_openai import OpenAIEmbeddings
+# from langchain_openai import OpenAIEmbeddings
+from langchain_openai import AzureOpenAIEmbeddings, AzureChatOpenAI
 import os
 # from langchain_pinecone import PineconeVectorStore
 # from langchain_community.vectorstores import Pinecone
@@ -18,7 +19,7 @@ DATA_PATH = "../Data_intranet/"
 USE_OPENAI = True
 
 if USE_OPENAI:
-    PROCESSED_FILE = "processed_files_chroma_openAI.txt"
+    PROCESSED_FILE = "processed_files_chroma_openAI-large.txt"
 else:
     PROCESSED_FILE = "processed_files_chroma_mistral.txt"
 
@@ -66,7 +67,7 @@ if __name__ == "__main__":
     
     # Identifiy the text files that are not processed yet.
     files2process, first_time = getTextFiles2Add()
-    print("Mumber of files Processed: ", len(files2process))
+    print("Number of files Processed: ", len(files2process))
     
     headers_to_split_on = [
         ("#", "Header 1"),
@@ -84,8 +85,11 @@ if __name__ == "__main__":
     if len(new_documents) > 0:
         # print(new_documents)
         if USE_OPENAI:
-            embedding = OpenAIEmbeddings(model="text-embedding-3-small")
-            vector_store_dir = "../hdr-manager-rmit-chroma_db"
+            embedding = AzureOpenAIEmbeddings(
+                azure_deployment="text-embedding-3-large",
+                api_version="2023-06-01-preview",
+            )
+            vector_store_dir = "../hdr-manager-rmit-chroma_db_v2"
         else:
             embedding = MistralAIEmbeddings()
             vector_store_dir = "../hdr-manager-rmit-chroma_db_mistral"
