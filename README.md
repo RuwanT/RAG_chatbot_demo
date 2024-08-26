@@ -3,7 +3,7 @@ A simple chatbot using Retrieval-Augmented Generation (RAG).
 
 The chatbot is designed to act as a university administrative officer, assisting with questions related to Higher Degree by Research (HDR) matters.
 
-The chatbot uses the OpenAI API and is based on Langchain. It can use either Pinecone or Chroma as the vector database.
+The chatbot uses the OpenAI API (later changed to Azure openAI) and is based on Langchain. It can use either Pinecone or Chroma as the vector database.
 
 ## Running code
 1. Create a Python virtual environment and install the requirements:
