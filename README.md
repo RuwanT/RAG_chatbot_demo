@@ -17,19 +17,26 @@ The chatbot uses the OpenAI API (later changed to Azure openAI) and is based on 
    PINECONE_API_KEY="your key"
    MISTRAL_API_KEY="your key"
    ```
-3. Add data to the vector database:
+   for Azure openAI use the below
+   ```
+   AZURE_OPENAI_ENDPOINT="https://[YOUR OPENAI].openai.azure.com/"
+   OPENAI_API_VERSION="2023-10-01-preview"
+   AZURE_OPENAI_API_KEY="your key"
+   OPENAI_API_TYPE="azure"
+   ```
+4. Add data to the vector database:
    - Save private data as markdown files and store them in `../Data_intranet/`
-4. If using Chroma DB:
+5. If using Chroma DB:
     ```
     >> python populate_vectorDB_Chroma
     ```
 
-5. If Using Pinecone DB
+6. If Using Pinecone DB
     ```
     >> python populate_vectorDB_pinecone
     ```
 
-6. Run the app: 
+7. Run the app: 
    - TThe app is built with Streamlit. Use the following command to run it: 
     ```
     >> streamlit run demo.py --server.fileWatcherType none --server.port 8080
